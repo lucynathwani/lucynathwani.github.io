@@ -1,51 +1,18 @@
-// Fetches recent publications from the ORCID public API and writes
-// them to publications.json, which the site reads at page-load time.
+// Fetches recent publications from the ORCID public API and writes them
+// to publications.json, which the site reads at page-load time.
 //
-// This runs server-side (inside a GitHub Actions job), not in the
-// visitor's browser, because getting an ORCID access token requires
-// a client secret that must never be exposed in client-side code.
+// Runs in a scheduled GitHub Actions job (see .github/workflows/
+// update-publications.yml). The public API needs no auth for public
+// records, so there are no secrets to configure.
 
 import { writeFileSync } from "node:fs";
 
-// TODO: replace with your own ORCID iD, e.g. "0000-0002-1825-0097"
-const ORCID_ID = process.env.ORCID_ID || "0000-0000-0000-0000";
+const ORCID_ID = process.env.ORCID_ID || "0009-0001-5002-3812";
+const MAX_WORKS = 6;
 
-const CLIENT_ID = process.env.ORCID_CLIENT_ID;
-const CLIENT_SECRET = process.env.ORCID_CLIENT_SECRET;
-
-if (!CLIENT_ID || !CLIENT_SECRET) {
-  throw new Error(
-    "Missing ORCID_CLIENT_ID / ORCID_CLIENT_SECRET environment variables."
-  );
-}
-
-async function getAccessToken() {
-  const res = await fetch("https://orcid.org/oauth/token", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      grant_type: "client_credentials",
-      scope: "/read-public",
-    }),
-  });
-  if (!res.ok) {
-    throw new Error(`Token request failed: ${res.status} ${await res.text()}`);
-  }
-  const data = await res.json();
-  return data.access_token;
-}
-
-async function getWorks(token) {
+async function getWorks() {
   const res = await fetch(`https://pub.orcid.org/v3.0/${ORCID_ID}/works`, {
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Accept: "application/json" },
   });
   if (!res.ok) {
     throw new Error(`Works request failed: ${res.status} ${await res.text()}`);
@@ -54,6 +21,8 @@ async function getWorks(token) {
 }
 
 function extractWork(group) {
+  // A group bundles the same work from multiple sources (e.g. a journal
+  // article and its arXiv preprint). work-summary[0] is ORCID's preferred one.
   const summary = group["work-summary"]?.[0];
   if (!summary) return null;
 
@@ -72,18 +41,17 @@ function extractWork(group) {
   return { title, year, journal, url };
 }
 
-const token = await getAccessToken();
-const data = await getWorks(token);
+const data = await getWorks();
 
 const works = (data.group ?? [])
   .map(extractWork)
   .filter(Boolean)
   .sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
-  .slice(0, 6);
+  .slice(0, MAX_WORKS);
 
 writeFileSync(
   "publications.json",
-  JSON.stringify({ updated: new Date().toISOString(), works }, null, 2)
+  JSON.stringify({ updated: new Date().toISOString(), works }, null, 2) + "\n"
 );
 
 console.log(`Wrote ${works.length} publications to publications.json`);

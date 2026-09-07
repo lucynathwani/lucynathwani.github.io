@@ -1,4 +1,23 @@
 {
-  "updated": null,
-  "works": []
+  "updated": "2026-09-07T00:00:00.000Z",
+  "works": [
+    {
+      "title": "First-principles evidence for conventional superconductivity in a quasicrystal approximant",
+      "year": 2026,
+      "journal": "Physical Review B",
+      "url": "https://doi.org/10.1103/qx58-z229"
+    },
+    {
+      "title": "Observation of Microscopic Domain Effects in the Metal–Insulator Transition of Thin-Film NdNiO3",
+      "year": 2026,
+      "journal": "Nano Letters",
+      "url": "https://doi.org/10.1021/acs.nanolett.5c04522"
+    },
+    {
+      "title": "HARDMath2: A Benchmark for Applied Mathematics Built by Students as Part of a Graduate Class",
+      "year": 2025,
+      "journal": "NeurIPS 2025",
+      "url": "https://doi.org/10.48550/ARXIV.2505.11774"
+    }
+  ]
 }

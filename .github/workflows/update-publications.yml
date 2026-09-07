@@ -20,10 +20,7 @@ jobs:
 
       - name: Fetch latest publications from ORCID
         env:
-          # TODO: replace with your own ORCID iD
-          ORCID_ID: "0000-0000-0000-0000"
-          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
-          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+          ORCID_ID: "0009-0001-5002-3812"
         run: node scripts/fetch-orcid.mjs
 
       - name: Commit changes if anything updated
