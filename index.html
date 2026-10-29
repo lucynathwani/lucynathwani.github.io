@@ -16,7 +16,7 @@
     --accent: #1e3a5f;
     --accent-soft: #e1e7ef;
     --rule: #d6dce4;
-    --measure: 640px;
+    --measure: 1120px;
   }
 
   * { box-sizing: border-box; }
@@ -38,20 +38,34 @@
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
   .wrap {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 4rem;
     max-width: var(--measure);
     margin: 0 auto;
-    padding: 6rem 1.5rem 5rem;
+    padding: 5rem 1.5rem;
   }
 
   header.intro {
-    margin-bottom: 4rem;
+    position: sticky;
+    top: 2rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px #1e3a5f08;
   }
+
+  .intro-copy { padding: 1.6rem 1.7rem 1.9rem; }
+  main { min-width: 0; }
 
   .name {
     font-family: 'Zilla Slab', serif;
-    font-size: 2.6rem;
+    font-size: 2.4rem;
+    line-height: 1.1;
     font-weight: 550;
-    margin: 0 0 0.3rem;
+    margin: 0 0 0.9rem;
     letter-spacing: -0.01em;
     color: var(--accent);
   }
@@ -69,11 +83,29 @@
     color: var(--muted);
     border-left: 2px solid var(--accent);
     padding-left: 0.9rem;
+    margin: 0;
   }
   .now strong { color: var(--ink); font-weight: 600; }
+  .now .placeholder { background: none; padding: 0; }
+
+  .tiling {
+    margin: 0;
+  }
+  .tiling img {
+    display: block;
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+  }
+  .tiling figcaption {
+    margin: 0.7rem 1.7rem 0;
+    color: var(--muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.025em;
+  }
 
   section {
-    margin-bottom: 3.4rem;
+    margin-bottom: 2.2rem;
   }
 
   section h2 {
@@ -96,18 +128,42 @@
   }
 
   .interests {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 0; margin: 0;
-    list-style: none;
+    padding-left: 1.25rem;
+    margin: 0;
+    list-style: disc;
   }
   .interests li {
-    font-size: 0.9rem;
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--rule);
-    border-radius: 100px;
+    padding-left: 0.2rem;
+    margin-bottom: 0.45rem;
+  }
+  .interests li::marker { color: var(--accent); }
+
+  .research-education {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .research-education section { margin-bottom: 0; }
+  .education-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .education-list li {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    align-items: start;
+    gap: 0.65rem;
+    margin-bottom: 0.9rem;
+  }
+  .education-list img { width: 22px; height: 22px; margin-top: 0.2rem; }
+  .education-list li:last-child { margin-bottom: 0; }
+  .education-list strong { display: block; font-weight: 600; }
+  .education-list span {
+    display: block;
     color: var(--muted);
+    font-size: 0.88rem;
   }
 
   .projects { display: flex; flex-direction: column; gap: 1.6rem; }
@@ -146,19 +202,25 @@
 
   .links {
     display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 0; margin: 0;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    padding: 1.3rem 0 0;
+    margin: 1.5rem 0 0;
+    border-top: 1px solid var(--rule);
     list-style: none;
   }
   .links a {
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    color: var(--accent);
+    text-decoration: none;
   }
-  .links .sub {
-    color: var(--muted);
-    font-weight: 400;
-    font-size: 0.92rem;
-  }
+  .links a:hover { background: var(--accent-soft); }
+  .links img { display: block; object-fit: contain; }
 
   footer {
     margin-top: 4rem;
@@ -168,9 +230,26 @@
     color: var(--muted);
   }
 
+  @media (max-width: 800px) {
+    .wrap {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 640px;
+      gap: 3rem;
+      padding: 3rem 1.5rem;
+    }
+    header.intro { position: static; }
+    .tiling img { height: 180px; }
+  }
+
   @media (max-width: 480px) {
-    .wrap { padding: 3.5rem 1.25rem 3rem; }
-    .name { font-size: 2.1rem; }
+    .wrap { padding: 1.5rem 1.25rem 3rem; }
+    .intro-copy { padding: 1.4rem; }
+    .tiling figcaption { margin-inline: 1.4rem; }
+    .name { font-size: 2.2rem; }
+  }
+
+  @media (max-width: 560px) {
+    .research-education { grid-template-columns: minmax(0, 1fr); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -182,11 +261,35 @@
   <div class="wrap">
 
     <header class="intro">
-      <h1 class="name">Lucy Nathwani</h1>
-      <p class="tagline">PhD Candidate in Experimental Condensed Matter Physics</p>
-      <p class="now"><strong>Now:</strong> <span class="placeholder">studying aperiodic moiré materials in the Checkelsky lab at MIT</span></p>
+      <figure class="tiling">
+        <img src="assets/penrose-tiling.svg" width="1184" height="420" alt="A two-color Penrose tiling with blue thin rhombi and pale blue thick rhombi.">
+        <figcaption>Penrose tiling &middot; order without repetition</figcaption>
+      </figure>
+      <div class="intro-copy">
+        <h1 class="name">Lucy Nathwani</h1>
+        <p class="tagline">PhD Candidate in Experimental Condensed Matter Physics</p>
+        <p class="now"><strong>Now:</strong> <span class="placeholder">studying aperiodic moiré materials in the Checkelsky lab at MIT</span></p>
+        <!-- Locally supplied SVG icons, without recoloring or redrawing.
+             LinkedIn profile-link rules: https://brand.linkedin.com/in-logo
+             ORCID display rules: https://info.orcid.org/documentation/integration-guide/orcid-id-display-guidelines/
+             Scholar profile-link permission: https://about.google/brand-resource-center/products-and-services/ -->
+        <nav aria-label="Connect">
+          <ul class="links">
+            <li><a href="https://www.linkedin.com/in/lucy-n-948842253" id="linkedin-link" aria-label="LinkedIn" title="LinkedIn">
+              <img src="assets/LinkedIn_icon.svg" width="25" height="25" alt="LinkedIn">
+            </a></li>
+            <li><a href="https://scholar.google.com/citations?user=5vOioEEAAAAJ&amp;hl=en" id="scholar-link-2" aria-label="Google Scholar" title="Google Scholar">
+              <img src="assets/Google_Scholar_logo%20(1).svg" width="25" height="25" alt="Google Scholar">
+            </a></li>
+            <li><a href="https://orcid.org/0009-0001-5002-3812" id="orcid-link-2" aria-label="ORCID" title="ORCID">
+              <img src="assets/ORCID_iD.svg" width="25" height="25" alt="ORCID">
+            </a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
+    <main>
     <section id="about">
       <h2>About me</h2>
       <p>
@@ -197,14 +300,25 @@
       </p>
     </section>
 
+    <div class="research-education">
     <section id="research">
       <h2>Research interests</h2>
       <ul class="interests">
-        <li class="placeholder">Low-dimensional materials</li>
-        <li class="placeholder">Quasiperiodicity</li>
-        <li class="placeholder">Thermal transport techniques</li>
+        <li>Low-dimensional materials</li>
+        <li>Quasiperiodicity</li>
+        <li>Thermal transport techniques</li>
       </ul>
     </section>
+
+    <section id="education">
+      <h2>Education</h2>
+      <ul class="education-list">
+        <li><img src="assets/graduation-cap.svg" alt=""><div><strong>PhD, Physics</strong><span>MIT</span></div></li>
+        <li><img src="assets/graduation-cap.svg" alt=""><div><strong>S.M., Applied Physics</strong><span>Harvard &middot; 2026</span></div></li>
+        <li><img src="assets/graduation-cap.svg" alt=""><div><strong>A.B., Physics</strong><span>Harvard &middot; 2026</span></div></li>
+      </ul>
+    </section>
+    </div>
 
     <section id="publications" class="pubs">
       <h2>Recent publications</h2>
@@ -235,18 +349,10 @@
       </div>
     </section> -->
 
-    <section id="connect">
-      <h2>Connect</h2>
-      <ul class="links">
-        <li><a href="https://www.linkedin.com/in/lucy-n-948842253" id="linkedin-link">LinkedIn</a> </li>
-        <li><a href="https://scholar.google.com/citations?user=5vOioEEAAAAJ&hl=en" id="scholar-link-2">Google Scholar</a> </li>
-        <li><a href="https://orcid.org/0009-0001-5002-3812" id="orcid-link-2">ORCID</a> </li>
-      </ul>
-    </section>
-
     <footer>
       &copy; <span id="year"></span> Lucy Nathwani
     </footer>
+    </main>
 
   </div>
 
@@ -270,7 +376,7 @@
         if (!works.length) throw new Error('no works yet');
 
         list.innerHTML = works.map(w => {
-          const title = escapeHtml(w.title);
+          const title = escapeHtml(w.title).replace(/NdNiO3\b/g, 'NdNiO<sub>3</sub>');
           const meta = [w.journal, w.year].filter(Boolean).map(escapeHtml).join(' &middot; ');
           const titleHtml = w.url
             ? `<a href="${escapeHtml(w.url)}" target="_blank" rel="noopener">${title}</a>`
